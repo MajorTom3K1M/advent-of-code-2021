@@ -11,11 +11,13 @@ const BOARD_SIZE = 5;
 
 const drawnSequence = boards.splice(0,1)[0];
 let count = {};
-let winnerIndex = -1;
+let winnerIndex = [];
 let lastNumber = 0;
-DRAWN: for(let number of drawnSequence) {
-  for(let boardNo = 0; boardNo < boards.length; boardNo++) {
-    const numberIndex = boards[boardNo].findIndex(((num) => num === number));
+for(let number of drawnSequence) {
+  BOARD: for(let boardNo = 0; boardNo < boards.length; boardNo++) {
+    // console.log({ isInclude: winnerIndex.includes(boardNo), winnerIndex, boardNo })
+    if(winnerIndex.includes(boardNo)) continue BOARD;
+    const numberIndex = boards[boardNo].findIndex(((num) => Number(num) === Number(number)));
     if(!count[boardNo]) count[boardNo] = new Array(5 * 5).fill(0);
     if(numberIndex >= 0) count[boardNo][numberIndex] = 1;
     
@@ -27,9 +29,8 @@ DRAWN: for(let number of drawnSequence) {
         horizontal += count[boardNo][i]
 
         if(horizontal === BOARD_SIZE) { 
-          winnerIndex = boardNo;
+          winnerIndex.push(boardNo);
           lastNumber = number;
-          break DRAWN; 
         }
     }
 
@@ -41,16 +42,17 @@ DRAWN: for(let number of drawnSequence) {
       vertical += count[boardNo][(i % BOARD_SIZE) * BOARD_SIZE + Math.floor(i / BOARD_SIZE)];
 
       if(vertical === BOARD_SIZE) { 
-        winnerIndex = boardNo;
+        winnerIndex.push(boardNo);
         lastNumber = number;
-        break DRAWN; 
       }
     }
   }
 }
 
-const sum = boards[winnerIndex].reduce((total, current, index) => {
-  if(count[winnerIndex][index] === 0) return total + Number(current);
+const wIndex = winnerIndex[winnerIndex.length - 1];
+
+const sum = boards[wIndex].reduce((total, current, index) => {
+  if(Number(count[wIndex][index]) === 0) return total + Number(current);
   return total;
 }, 0);
 

@@ -1,34 +1,31 @@
-use std::env;
-use std::fs;
-
 struct Submarine;
 impl Submarine {
-    pub fn read(instruction: &str) {
-        // println!("{:?}", instruction.split(" ").collect::<Vec<&str>>());
+    fn read(instruction: &str) -> Result<(&str, i32), ()> {
         if let [cmd, number] = instruction.split(" ").collect::<Vec<&str>>()[..] {
-            // println!("{:?} {:?}", number, cmd.to_string());
-            println!("{:?}", number);
-            match cmd {
-                "forward" => println!("forward"),
-                "down" => println!("down"),
-                "up" => println!("up"),
-                _ => println!("wah!")
-            };
+            return Ok((cmd, number.parse::<i32>().unwrap()));
         }
+        Err(())
     }
 
-    // pub fn dive(instructions: Vec<String>) -> i32 {
-
-    // }
+    pub fn dive(instructions: Vec<&str>) -> Result<(i32, i32, i32), &str> {
+        let mut horizontal = 0;
+        let mut depth = 0;
+        for i in 0..instructions.len() {
+            let (cmd, number) = Submarine::read(instructions[i]).unwrap();
+            match cmd {
+                "forward" => { horizontal += number; },
+                "down" => { depth += number; },
+                "up" => { depth -= number; },
+                _ => { return Err("HALT: instruction unknown!"); }
+            }
+        }
+        Ok((horizontal, depth, depth * horizontal))
+    }
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let filename = &args[1];
-    println!("In file {}", filename);
-    let contents = fs::read_to_string(filename)
-        .expect("Something went wrong reading the file");
-
-    let instructions: Vec<&str> = contents.split("\r\n").collect();
-    Submarine::read(instructions[0]);
+    let instructions: Vec<&str> = include_str!("./input.txt").lines().collect();
+    
+    let (horizontal, depth, multiply) = Submarine::dive(instructions).unwrap();
+    println!("horizontal = {:?}, depth = {:?}, multiply = {:?}", horizontal, depth, multiply);
 }

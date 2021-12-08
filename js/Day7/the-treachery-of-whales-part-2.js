@@ -13,10 +13,11 @@ let minFuel = Number.MAX_SAFE_INTEGER;
 for (let target = 0; target < MAX_POSITION; target++) {
   for (let position of positions) {
     if (!fuelUsed[target]) fuelUsed[target] = 0;
-    fuelUsed[target] += Math.abs(position - target);
+    const n = Math.abs(position - target);
+    fuelUsed[target] += (n * (n + 1)) / 2;
   }
 
-  if (minFuel > fuelUsed[target]) minFuel = fuelUsed[target];
+  if(minFuel > fuelUsed[target]) minFuel = fuelUsed[target];
 }
 
 console.log({ minFuel });

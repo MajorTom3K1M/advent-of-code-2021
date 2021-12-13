@@ -1,6 +1,6 @@
 const fs = require("fs");
 const octopus = fs
-  .readFileSync("./js/Day11/test.txt")
+  .readFileSync("./js/Day11/input.txt")
   .toString()
   .split("\r\n")
   .map((numbers) => numbers.split("").map(Number));

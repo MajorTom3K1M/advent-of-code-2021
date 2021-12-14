@@ -31,7 +31,6 @@ while (queue.length > 0) {
                 continue LOOP;
             }
             
-            
             if(adjacent === adjacent.toLowerCase() && v.includes(adjacent)) {
                 continue LOOP;
             }

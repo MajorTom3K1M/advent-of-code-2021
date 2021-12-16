@@ -25,7 +25,23 @@ for (let instruction of instructions) {
     }
   }
   coordinates = newCoord;
-  break;
 }
 
-console.log(coordinates.size);
+let width = 0;
+let height = 0;
+for(let coordinate of coordinates) {
+    const [x, y] = coordinate.split(",").map(Number);
+    if(width < x) width = x;
+    if(height < y) height = y;
+}
+
+for(let y = 0; y <= height; y++) {
+    for(let x = 0; x <= width; x++) {
+        if(coordinates.has(`${x},${y}`)) {
+            process.stdout.write("#");
+        } else {
+            process.stdout.write(" ");
+        }
+    }
+    process.stdout.write("\n");
+}

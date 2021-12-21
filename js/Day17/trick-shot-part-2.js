@@ -5,6 +5,7 @@ const targetAreaText = fs
 
 const targetArea = /target area: x=(?<xMin>-?\d+)..(?<xMax>-?\d+), y=(?<yMin>-?\d+)..(?<yMax>-?\d+)/g.exec(targetAreaText).groups;
 
+
 const fire = ({ veloX, veloY }, targetArea) => {
     let newX = 0, newY = 0;
     let steps = []
@@ -24,16 +25,13 @@ const fire = ({ veloX, veloY }, targetArea) => {
     return [];
 }
 
-let max = Number.MIN_SAFE_INTEGER;
-for(let y = 0; y < Math.abs(targetArea.yMin); y++) {
-    for(let x = 0; x < targetArea.xMin; x++) {
+let count = 0;
+for(let y = targetArea.yMin; y <= Math.abs(targetArea.yMin); y++) {
+    for(let x = 0; x <= targetArea.xMax; x++) {
         const steps = fire({ veloX: x, veloY: y }, targetArea);
         if(steps.length) {
-            let stepsMax = Math.max(...steps.map(step => step.y));
-            if(max < stepsMax) {
-                max = stepsMax;
-            }
+            count++;
         }
     }
 }
-console.log({ max })
+console.log({ count })
